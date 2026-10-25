@@ -26,9 +26,19 @@ API_PROXY_TARGET=http://127.0.0.1:8005
 - Password recovery and reset, with matching-password and UTF-8 length validation.
 - Personal overview, name/email editing, and password changes.
 - API key creation, one-time key display/copy, rename, pause/activate, and confirmed deletion.
+- Admin-only user directory at `/admin/users`, with server-side search and pagination,
+  profile/password editing, admin promotion, ban/unban, and confirmed deletion.
 - Responsive navigation, labeled form fields, keyboard focus indicators, loading/error states, and reduced-motion support.
 
-The overview clearly marks personal monitoring as upcoming: the backend does not implement monitors, updates, or conversation yet. Administrative user management remains in the existing backend admin panel.
+The overview clearly marks personal monitoring as upcoming: the backend does not implement monitors, updates, or conversation yet.
+
+Admins see **Manage users** under **Administration** in the sidebar. The backend
+supplies the current account's role through `/users/me` and enforces admin access
+on user-management endpoints. Regular users cannot open the directory. The page
+prevents banning or deleting your own account, and the API prevents deletion of
+the last admin. Email verification status is shown for each account. Editing a
+user leaves their password unchanged unless you enter a new one. The existing
+backend admin panel remains available.
 
 ## Email links
 

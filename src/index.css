@@ -1376,6 +1376,212 @@ h4 {
   white-space: nowrap;
 }
 
+.admin-users-card {
+  overflow: hidden;
+}
+.admin-search {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 20px 28px;
+  border-bottom: 1px solid var(--line);
+}
+.admin-search-input {
+  position: relative;
+  flex: 1;
+}
+.admin-search-input > .bi {
+  position: absolute;
+  left: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--muted);
+}
+.admin-search-input input {
+  padding-left: 39px;
+}
+.admin-user-identity {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.admin-user-identity > div {
+  min-width: 0;
+}
+.admin-user-identity strong {
+  display: block;
+  color: var(--ink);
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+.admin-user-identity div > span,
+.admin-user-identity div > small {
+  display: block;
+  color: var(--muted);
+  font-size: 11px;
+  margin-top: 4px;
+  overflow-wrap: anywhere;
+}
+.admin-user-identity div > small {
+  font-size: 9px;
+}
+.admin-you {
+  margin-left: 5px;
+  color: var(--primary);
+  font-size: 9px;
+  font-weight: 500;
+}
+.admin-users-table td:first-child {
+  min-width: 235px;
+}
+.admin-users-table td:not(:first-child) {
+  white-space: nowrap;
+}
+.admin-role {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  color: var(--muted);
+}
+.admin-role-elevated {
+  color: var(--primary);
+}
+.status-banned {
+  color: var(--danger);
+  border-color: var(--danger-border);
+  background: var(--danger-soft);
+}
+.admin-pagination {
+  border-top: 1px solid var(--line);
+  padding: 18px 24px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  font-size: 11px;
+  color: var(--muted);
+}
+.admin-pagination nav {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+.user-dialog {
+  width: min(540px, calc(100% - 32px));
+  max-height: calc(100svh - 48px);
+  padding: 0;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--surface);
+  color: var(--ink);
+  box-shadow: 0 24px 70px #0f172a33;
+}
+.user-dialog::backdrop {
+  background: #0f172a99;
+}
+.user-dialog-heading {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  align-items: flex-start;
+  padding: 24px 28px;
+  border-bottom: 1px solid var(--line);
+}
+.user-dialog-heading h2 {
+  font-size: 22px;
+  margin: 0;
+  letter-spacing: -0.6px;
+}
+.user-dialog-body {
+  padding: 24px 28px;
+}
+.user-dialog-description {
+  color: var(--muted);
+  line-height: 1.8;
+  margin: 0;
+  font-size: 13px;
+}
+.user-dialog-footer {
+  padding: 18px 28px;
+  border-top: 1px solid var(--line);
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+@media (max-width: 767px) {
+  .admin-users-table thead {
+    display: none;
+  }
+  .admin-users-table,
+  .admin-users-table tbody,
+  .admin-users-table tr,
+  .admin-users-table td {
+    display: block;
+    width: 100%;
+  }
+  .admin-users-table tr {
+    padding: 16px 0;
+    border-bottom: 1px solid var(--line);
+  }
+  .admin-users-table tr:last-child {
+    border-bottom: 0;
+  }
+  .admin-users-table td {
+    padding: 6px 16px;
+    border: 0;
+  }
+  .admin-users-table td:first-child {
+    min-width: 0;
+    padding-bottom: 14px;
+  }
+  .admin-users-table td[data-label] {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .admin-users-table td[data-label]::before {
+    content: attr(data-label);
+    font-size: 11px;
+  }
+  .admin-users-table .key-actions {
+    padding-top: 8px;
+    gap: 8px;
+  }
+  .admin-users-table .icon-button {
+    min-width: 40px;
+    min-height: 40px;
+    background: var(--background);
+  }
+}
+@media (max-width: 575px) {
+  .admin-search {
+    padding: 18px 16px;
+    flex-wrap: wrap;
+  }
+  .admin-search-input {
+    flex-basis: 100%;
+  }
+  .admin-pagination {
+    padding: 18px 16px;
+  }
+  .admin-pagination nav {
+    width: 100%;
+    justify-content: space-between;
+    gap: 6px;
+  }
+  .admin-pagination .btn {
+    padding: 8px 10px;
+  }
+  .user-dialog-heading,
+  .user-dialog-body,
+  .user-dialog-footer {
+    padding: 20px;
+  }
+}
+
 .auth-story .pill {
   color: var(--teal-on-dark);
   background: #0d94881a;

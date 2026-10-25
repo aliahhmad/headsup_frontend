@@ -5,6 +5,7 @@ import Auth from './pages/Auth'
 import Overview from './pages/Overview'
 import Settings from './pages/Settings'
 import ApiKeys from './pages/ApiKeys'
+import AdminUsers from './pages/AdminUsers'
 
 const authRoutes = {
   '/': 'login',
@@ -19,6 +20,7 @@ const navigation = [
   { path: '/profile', label: 'My profile', icon: 'person' },
   { path: '/security', label: 'Security', icon: 'shield-check' },
   { path: '/api-keys', label: 'API keys', icon: 'key' },
+  { path: '/admin/users', label: 'Manage users', icon: 'people', admin: true },
 ]
 
 export default function App() {
@@ -121,7 +123,7 @@ export default function App() {
         </div>
         <p className="nav-section-label">WORKSPACE</p>
         <nav aria-label="Main navigation" className="nav flex-column">
-          {navigation.map((item) => (
+          {navigation.filter((item) => !item.admin).map((item) => (
             <Link
               key={item.path}
               to={item.path}
@@ -134,6 +136,22 @@ export default function App() {
             </Link>
           ))}
         </nav>
+        {user?.role === 'admin' && (
+          <>
+            <p className="nav-section-label mt-4">ADMINISTRATION</p>
+            <nav aria-label="Administration" className="nav flex-column">
+              <Link
+                to="/admin/users"
+                className={`nav-link ${path === '/admin/users' ? 'active' : ''}`}
+                aria-current={path === '/admin/users' ? 'page' : undefined}
+              >
+                <Icon name="people" />
+                Manage users
+                {path === '/admin/users' && <span className="nav-active-dot" />}
+              </Link>
+            </nav>
+          </>
+        )}
         <div className="sidebar-bottom">
           <div className="quiet-card">
             <Icon name="cup-hot" />
@@ -224,6 +242,17 @@ export default function App() {
             />
           ) : path === '/api-keys' ? (
             <ApiKeys />
+          ) : path === '/admin/users' ? (
+            user.role === 'admin' ? (
+              <AdminUsers currentUser={user} setCurrentUser={setUser} />
+            ) : (
+              <div className="empty-state">
+                <span className="empty-icon"><Icon name="shield-lock" /></span>
+                <h1>Admin access required.</h1>
+                <p>Only administrators can manage user accounts.</p>
+                <Link className="btn btn-primary" to="/overview">Back to your workspace</Link>
+              </div>
+            )
           ) : (
             <div className="empty-state">
               <h1>A little off track.</h1>
