@@ -45,6 +45,11 @@ npm run preview
 
 Deploy the generated `dist/` directory with SPA fallback to `index.html`. In production, reverse proxy `/api/` to FastAPI with that prefix removed, or set `VITE_API_URL` to the public API base URL **before building** and allow the frontend origin in the backend’s `CORS_ORIGINS`. The development proxy does not run in the production build or Vite preview.
 
+For Vercel, `vercel.json` rewrites application routes to `/index.html` so opening
+or refreshing `/login`, `/profile`, and password-reset links works. Set the
+framework preset to Vite, the build command to `npm run build`, and the output
+directory to `dist`. Redeploy after adding or changing the routing configuration.
+
 Fonts load from Google Fonts, with local sans-serif fallbacks. Bootstrap, icons, and the logo are bundled locally.
 
 ## Verification
