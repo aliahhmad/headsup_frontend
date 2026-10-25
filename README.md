@@ -19,6 +19,39 @@ To use another backend port, copy `.env.example` to `.env.local`, set `API_PROXY
 API_PROXY_TARGET=http://127.0.0.1:8005
 ```
 
+## Frontend structure
+
+- `src/pages/` composes each screen and owns its requests and page state.
+- `src/components/ui/` contains shared controls and presentation: fields, buttons,
+  notices, avatars, status badges, cards, pagination, and loading/empty states.
+  `src/components/UI.jsx` keeps the existing shared UI imports available.
+- `src/components/layout/` contains the workspace shell, sidebar, navigation,
+  topbar, and shared footer. `AuthLayout.jsx` composes the authentication shell.
+- `src/components/forms/` contains profile and new-password fields shared by
+  registration, settings, and user management.
+- `src/components/auth/`, `api-keys/`, `admin/`, and `overview/` contain components
+  specific to those features. Tables and forms receive data and callbacks so
+  they can be composed without duplicating markup or request logic.
+- `src/hooks/useServiceStatus.js` owns heartbeat polling, retries, and cleanup;
+  `ServiceStatusBanner.jsx` renders the result and reserves the banner's space.
+- `src/lib/` contains the API client, browser navigation, and route definitions.
+
+Use shared components for new screens, and keep API calls with the owning page
+or feature. For example, an empty list can render the same state with its own
+copy and action:
+
+```jsx
+import EmptyState from './components/ui/EmptyState'
+
+<EmptyState
+  icon="plug"
+  title="No connections yet."
+  action={<button className="btn btn-primary" onClick={onCreate}>Add connection</button>}
+>
+  Connect a tool to get started.
+</EmptyState>
+```
+
 ## Included flows
 
 - Registration and email verification (new accounts must verify before signing in).
@@ -72,5 +105,7 @@ directory to `dist`. Redeploy after adding or changing the routing configuration
 Fonts load from Google Fonts, with local sans-serif fallbacks. Bootstrap, icons, and the logo are bundled locally.
 
 ## Verification
+
+Run `npm run lint` and `npm run build` after changes.
 
 The implementation was checked with a production build, desktop/mobile Chrome checks, and real account flows against the local HeadsUp API and Mailpit: registration, verification, sign-in, profile updates, password change/recovery, token refresh, and API key management.

@@ -1,4 +1,6 @@
-import { Icon, Link, PageHeading } from '../components/UI'
+import ActionCard from '../components/ui/ActionCard'
+import WelcomeBanner from '../components/overview/WelcomeBanner'
+import { Icon, PageHeading } from '../components/UI'
 
 export default function Overview({ user }) {
   return (
@@ -9,34 +11,7 @@ export default function Overview({ user }) {
       >
         Your interests. Your account. A space that’s yours.
       </PageHeading>
-      <section className="welcome-banner">
-        <div className="welcome-copy">
-          <span className="pill">
-            <span className="status-dot" />
-            YOU’RE IN GOOD COMPANY
-          </span>
-          <h2>
-            More signal.
-            <br />
-            <span>Less noise.</span>
-          </h2>
-          <p>
-            HeadsUp is taking shape around a simple idea: keep an eye on what
-            matters, and speak up when it changes.
-          </p>
-          <span className="coming-soon-label">
-            <Icon name="stars" /> Personal monitoring is on the way
-          </span>
-        </div>
-        <div className="banner-radar" aria-hidden="true">
-          <span />
-          <span />
-          <span />
-          <img src="/favicon.svg" alt="" />
-          <i className="radar-spark spark-one" />
-          <i className="radar-spark spark-two" />
-        </div>
-      </section>
+      <WelcomeBanner />
       <div className="section-heading">
         <h2>Make yourself at home</h2>
         <span>A few things you can do right now</span>
@@ -69,17 +44,15 @@ export default function Overview({ user }) {
           },
         ].map((card) => (
           <div className="col-md-4" key={card.link}>
-            <Link to={card.link} className="card setup-card h-100">
-              <span className={`tile-icon ${card.color}`}>
-                <Icon name={card.icon} />
-              </span>
-              <h3>{card.title}</h3>
-              <p>{card.text}</p>
-              <span className="card-action">
-                {card.action}
-                <Icon name="arrow-up-right" />
-              </span>
-            </Link>
+            <ActionCard
+              to={card.link}
+              icon={card.icon}
+              title={card.title}
+              action={card.action}
+              tone={card.color}
+            >
+              {card.text}
+            </ActionCard>
           </div>
         ))}
       </div>

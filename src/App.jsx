@@ -1,27 +1,16 @@
+import { navigate } from './lib/navigation'
 import { useEffect, useState } from 'react'
 import { api, getSession, saveSession } from './lib/api'
-import { Brand, Icon, Link, navigate, Notice } from './components/UI'
+import { Link, Notice } from './components/UI'
+import { authRoutes, navigation } from './lib/routes'
+import AppLayout from './components/layout/AppLayout'
+import EmptyState from './components/ui/EmptyState'
+import LoadingState from './components/ui/LoadingState'
 import Auth from './pages/Auth'
 import Overview from './pages/Overview'
 import Settings from './pages/Settings'
 import ApiKeys from './pages/ApiKeys'
 import AdminUsers from './pages/AdminUsers'
-
-const authRoutes = {
-  '/': 'login',
-  '/login': 'login',
-  '/register': 'register',
-  '/forgot-password': 'forgot',
-  '/reset-password': 'reset',
-  '/verify': 'verify',
-}
-const navigation = [
-  { path: '/overview', label: 'Overview', icon: 'grid-1x2' },
-  { path: '/profile', label: 'My profile', icon: 'person' },
-  { path: '/security', label: 'Security', icon: 'shield-check' },
-  { path: '/api-keys', label: 'API keys', icon: 'key' },
-  { path: '/admin/users', label: 'Manage users', icon: 'people', admin: true },
-]
 
 export default function App() {
   const [path, setPath] = useState(
@@ -31,23 +20,10 @@ export default function App() {
   const [user, setUser] = useState(null)
   const [error, setError] = useState('')
   const [retry, setRetry] = useState(0)
-  const [menuOpen, setMenuOpen] = useState(false)
   const authMode = authRoutes[path]
-  useEffect(() => {
-    if (!menuOpen) return
-    const closeOnEscape = (event) => {
-      if (event.key === 'Escape') {
-        setMenuOpen(false)
-        document.querySelector('[aria-label="Open navigation"]')?.focus()
-      }
-    }
-    window.addEventListener('keydown', closeOnEscape)
-    return () => window.removeEventListener('keydown', closeOnEscape)
-  }, [menuOpen])
   useEffect(() => {
     const onPath = () => {
       setPath(window.location.pathname.replace(/\/$/, '') || '/')
-      setMenuOpen(false)
     }
     const onSession = () => {
       setSession(getSession())
@@ -100,177 +76,71 @@ export default function App() {
     setError('')
     navigate('/login')
   }
-  const initials = user
-    ? `${user.first_name?.[0] || ''}${user.last_name?.[0] || ''}`
-    : '…'
   const page = navigation.find((item) => item.path === path)
   return (
-    <div className="app-shell">
-      <aside className={`sidebar ${menuOpen ? 'sidebar-open' : ''}`}>
-        <div className="sidebar-brand">
-          <Brand />
-          <button
-            className="btn icon-button d-lg-none"
-            onClick={() => setMenuOpen(false)}
-            aria-label="Close navigation"
-          >
-            <Icon name="x-lg" />
-          </button>
-        </div>
-        <div className="workspace-label">
-          <span className="workspace-dot" />
-          Your personal space
-        </div>
-        <p className="nav-section-label">WORKSPACE</p>
-        <nav aria-label="Main navigation" className="nav flex-column">
-          {navigation.filter((item) => !item.admin).map((item) => (
-            <Link
-              key={item.path}
-              to={item.path}
-              className={`nav-link ${path === item.path ? 'active' : ''}`}
-              aria-current={path === item.path ? 'page' : undefined}
-            >
-              <Icon name={item.icon} />
-              {item.label}
-              {path === item.path && <span className="nav-active-dot" />}
-            </Link>
-          ))}
-        </nav>
-        {user?.role === 'admin' && (
-          <>
-            <p className="nav-section-label mt-4">ADMINISTRATION</p>
-            <nav aria-label="Administration" className="nav flex-column">
-              <Link
-                to="/admin/users"
-                className={`nav-link ${path === '/admin/users' ? 'active' : ''}`}
-                aria-current={path === '/admin/users' ? 'page' : undefined}
-              >
-                <Icon name="people" />
-                Manage users
-                {path === '/admin/users' && <span className="nav-active-dot" />}
-              </Link>
-            </nav>
-          </>
-        )}
-        <div className="sidebar-bottom">
-          <div className="quiet-card">
-            <Icon name="cup-hot" />
-            <strong>A little peace of mind.</strong>
-            <p>
-              Less checking.
-              <br />
-              More living.
-            </p>
-            <span>THAT’S THE IDEA.</span>
-          </div>
-          <button
-            className="profile-switch"
-            onClick={() => navigate('/profile')}
-          >
-            <span className="avatar">{initials}</span>
-            <span className="profile-switch-text">
-              <strong>
-                {user?.first_name || 'Your account'} {user?.last_name}
-              </strong>
-              <small>Personal account</small>
-            </span>
-            <Icon name="chevron-right" />
-          </button>
-        </div>
-      </aside>
-      {menuOpen && (
-        <button
-          className="sidebar-backdrop d-lg-none"
-          onClick={() => setMenuOpen(false)}
-          aria-label="Close navigation"
-        />
-      )}
-      <div className="app-content">
-        <header className="app-topbar">
-          <div className="d-flex align-items-center gap-3">
+    <AppLayout
+      path={path}
+      user={user}
+      title={page?.label || 'Page'}
+      onSignOut={signOut}
+    >
+      {!user ? (
+        error ? (
+          <div className="loading-panel">
+            <Notice>{error}</Notice>
             <button
-              className="btn icon-button d-lg-none"
-              onClick={() => setMenuOpen(true)}
-              aria-label="Open navigation"
-              aria-expanded={menuOpen}
+              className="btn btn-primary"
+              onClick={() => setRetry((value) => value + 1)}
             >
-              <Icon name="list" />
+              Try again
             </button>
-            <span className="breadcrumb-root">My workspace</span>
-            <Icon name="chevron-right" />
-            <span>{page?.label || 'Page'}</span>
           </div>
-          <button className="btn signout-button" onClick={signOut}>
-            <Icon name="box-arrow-right" />
-            <span>Sign out</span>
-          </button>
-        </header>
-        <main className="workspace-main" id="main-content">
-          {!user ? (
-            <div className="loading-panel">
-              {error ? (
-                <>
-                  <Notice>{error}</Notice>
-                  <button
-                    className="btn btn-primary"
-                    onClick={() => setRetry(retry + 1)}
-                  >
-                    Try again
-                  </button>
-                </>
-              ) : (
-                <>
-                  <span className="spinner-border text-success" role="status">
-                    <span className="visually-hidden">
-                      Loading your account
-                    </span>
-                  </span>
-                  <p className="text-secondary mt-3">
-                    Getting your space ready…
-                  </p>
-                </>
-              )}
-            </div>
-          ) : path === '/overview' ? (
-            <Overview user={user} />
-          ) : ['/profile', '/security'].includes(path) ? (
-            <Settings
-              key={path}
-              user={user}
-              setUser={setUser}
-              security={path === '/security'}
-            />
-          ) : path === '/api-keys' ? (
-            <ApiKeys />
-          ) : path === '/admin/users' ? (
-            user.role === 'admin' ? (
-              <AdminUsers currentUser={user} setCurrentUser={setUser} />
-            ) : (
-              <div className="empty-state">
-                <span className="empty-icon"><Icon name="shield-lock" /></span>
-                <h1>Admin access required.</h1>
-                <p>Only administrators can manage user accounts.</p>
-                <Link className="btn btn-primary" to="/overview">Back to your workspace</Link>
-              </div>
-            )
-          ) : (
-            <div className="empty-state">
-              <h1>A little off track.</h1>
-              <p>We couldn’t find this page.</p>
+        ) : (
+          <LoadingState className="loading-panel" label="Loading your account">
+            <p className="text-secondary mt-3">Getting your space ready…</p>
+          </LoadingState>
+        )
+      ) : path === '/overview' ? (
+        <Overview user={user} />
+      ) : ['/profile', '/security'].includes(path) ? (
+        <Settings
+          key={path}
+          user={user}
+          setUser={setUser}
+          security={path === '/security'}
+        />
+      ) : path === '/api-keys' ? (
+        <ApiKeys />
+      ) : path === '/admin/users' ? (
+        user.role === 'admin' ? (
+          <AdminUsers currentUser={user} setCurrentUser={setUser} />
+        ) : (
+          <EmptyState
+            icon="shield-lock"
+            heading="h1"
+            title="Admin access required."
+            action={
               <Link className="btn btn-primary" to="/overview">
                 Back to your workspace
               </Link>
-            </div>
-          )}
-        </main>
-        <footer className="workspace-footer">
-          <span>© {new Date().getFullYear()} HeadsUp</span>
-          <span>
-            Mindful of your attention.
-            <Icon name="asterisk" />
-          </span>
-        </footer>
-      </div>
-    </div>
+            }
+          >
+            Only administrators can manage user accounts.
+          </EmptyState>
+        )
+      ) : (
+        <EmptyState
+          heading="h1"
+          title="A little off track."
+          action={
+            <Link className="btn btn-primary" to="/overview">
+              Back to your workspace
+            </Link>
+          }
+        >
+          We couldn’t find this page.
+        </EmptyState>
+      )}
+    </AppLayout>
   )
 }
