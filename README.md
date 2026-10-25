@@ -82,6 +82,30 @@ the last admin. Email verification status is shown for each account. Editing a
 user leaves their password unchanged unless you enter a new one. The existing
 backend admin panel remains available.
 
+## Referral-only demo signup
+
+The signup form reads the backend's registration settings before allowing
+submission. When referral-only signup is on, it requires a referral code and
+checks it in a separate request before creating an account. Invalid codes keep
+the visitor on the form, and failures to load signup settings show a retry
+button. When the setting is false, the field is hidden and signup works normally.
+
+Admins can open **Administration → Signup settings** at `/admin/signup`, toggle
+**Require a referral code to sign up**, and save. The badge shows the saved
+policy; the switch previews a change until it is saved. Failed saves leave the
+existing policy in effect. The setting persists across backend restarts and
+applies to all visitors. Regular users cannot access this screen or its API.
+
+The form refreshes the policy when its tab receives focus and before submission.
+If codes become required while a visitor is filling out the form, their account
+details are preserved and they are prompted to enter a code.
+
+Configure the private `REFERRAL_CODE` on the **backend**. The environment flag
+`REFERRAL_CODE_ENABLED` is the initial default until an admin saves an override.
+There is no frontend flag, and the code must never be put in a `VITE_*` variable.
+See the [backend setup](../api/README.md#referral-only-demo-signup). Apply its
+database migration and deploy its endpoints before deploying this frontend.
+
 ## Email links
 
 The existing backend verification email points to the API’s `/verify?code=…` route. Following that link verifies the account; then return to the frontend to sign in. The frontend also supports `/verify?code=…`, or pasting the code at `/verify` using “Have a verification code?” on the registration confirmation.

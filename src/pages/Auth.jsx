@@ -4,18 +4,26 @@ import { api, saveSession, validatePassword } from '../lib/api'
 import AuthLayout from '../components/AuthLayout'
 import AuthForm from '../components/auth/AuthForm'
 import AuthSuccess from '../components/auth/AuthSuccess'
+import useRegistrationSettings from '../hooks/useRegistrationSettings'
 
 export default function Auth({ mode = 'login' }) {
   const [busy, setBusy] = useState(false)
   const [error, setError] = useState('')
   const [success, setSuccess] = useState(null)
+  const [checkingReferral, setCheckingReferral] = useState(false)
+  const registration = useRegistrationSettings(mode === 'register')
   const code = new URLSearchParams(window.location.search).get('code') || ''
   async function submit(event) {
     event.preventDefault()
+    if (
+      busy ||
+      (mode === 'register' && (registration.loading || registration.error))
+    )
+      return
     setError('')
     setBusy(true)
     const fields = Object.fromEntries(new FormData(event.currentTarget))
-    for (const field of ['email', 'first_name', 'last_name']) {
+    for (const field of ['email', 'first_name', 'last_name', 'referral_code']) {
       if (fields[field]) fields[field] = fields[field].trim()
     }
     try {
@@ -29,6 +37,28 @@ export default function Auth({ mode = 'login' }) {
         navigate('/overview')
       } else if (mode === 'register') {
         validatePassword(fields.password)
+        const required = await registration.refresh()
+        if (required) {
+          if (!fields.referral_code) {
+            throw new Error(
+              'A referral code is now required. Enter your invitation code to continue.',
+            )
+          }
+          setCheckingReferral(true)
+          const checked = await api('/registration/referral-code/', {
+            method: 'POST',
+            body: { referral_code: fields.referral_code },
+            auth: false,
+          })
+          if (checked?.valid !== true) {
+            throw new Error(
+              'The referral code could not be verified. Please try again.',
+            )
+          }
+          setCheckingReferral(false)
+        } else {
+          delete fields.referral_code
+        }
         await api('/register/', { method: 'POST', body: fields, auth: false })
         setSuccess({
           title: 'Check your inbox.',
@@ -72,6 +102,7 @@ export default function Auth({ mode = 'login' }) {
       setError(err.message)
     } finally {
       setBusy(false)
+      setCheckingReferral(false)
     }
   }
   return (
@@ -90,6 +121,8 @@ export default function Auth({ mode = 'login' }) {
             busy={busy}
             error={error}
             onSubmit={submit}
+            registration={registration}
+            checkingReferral={checkingReferral}
           />
         )}
       </div>

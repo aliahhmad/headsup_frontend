@@ -12,4 +12,10 @@ export const navigation = [
   { path: '/security', label: 'Security', icon: 'shield-check' },
   { path: '/api-keys', label: 'API keys', icon: 'key' },
   { path: '/admin/users', label: 'Manage users', icon: 'people', admin: true },
+  {
+    path: '/admin/signup',
+    label: 'Signup settings',
+    icon: 'person-lock',
+    admin: true,
+  },
 ]

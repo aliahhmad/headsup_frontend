@@ -1,6 +1,8 @@
 import { Field, Icon, Link, Notice, PasswordField, Submit } from '../UI'
 import ProfileFields from '../forms/ProfileFields'
 import NewPasswordFields from '../forms/NewPasswordFields'
+import ReferralCodeField from '../forms/ReferralCodeField'
+import LoadingState from '../ui/LoadingState'
 
 const content = {
   login: {
@@ -35,7 +37,15 @@ const content = {
   },
 }
 
-export default function AuthForm({ mode, code, busy, error, onSubmit }) {
+export default function AuthForm({
+  mode,
+  code,
+  busy,
+  error,
+  onSubmit,
+  registration,
+  checkingReferral,
+}) {
   const page = content[mode]
   return (
     <>
@@ -44,87 +54,115 @@ export default function AuthForm({ mode, code, busy, error, onSubmit }) {
       </div>
       <p className="eyebrow">{page.eyebrow}</p>
       <h2>{page.title}</h2>
-      <p className="form-subtitle">{page.subtitle}</p>
+      <p className="form-subtitle">
+        {mode === 'register' && registration.required
+          ? 'This demo is invite-only. Enter your referral code to create an account.'
+          : page.subtitle}
+      </p>
       <Notice>{error}</Notice>
-      <form onSubmit={onSubmit}>
-        {mode === 'register' && <ProfileFields register />}
-        {['login', 'forgot'].includes(mode) && (
-          <Field
-            id="email"
-            label="Email address"
-            type="email"
-            placeholder="you@example.com"
-            autoComplete="email"
-          />
-        )}
-        {['login', 'register'].includes(mode) && (
-          <PasswordField
-            placeholder={
-              mode === 'login'
-                ? 'Enter your password'
-                : 'Create a strong password'
-            }
-            autoComplete={
-              mode === 'login' ? 'current-password' : 'new-password'
-            }
-            minLength={mode === 'login' ? undefined : 8}
-            hint={
-              mode !== 'login'
-                ? 'At least 8 characters. Maximum 72 bytes.'
-                : undefined
-            }
-          />
-        )}
-        {mode === 'reset' && (
-          <NewPasswordFields
-            label="Password"
-            confirmationPlaceholder="Enter your password again"
-          />
-        )}
-        {mode === 'login' && (
-          <div className="d-flex justify-content-between align-items-center login-options">
-            <div className="form-check">
-              <input
-                className="form-check-input"
-                type="checkbox"
-                id="remember"
-                name="remember"
-              />
-              <label className="form-check-label" htmlFor="remember">
-                Remember me
-              </label>
+      {mode === 'register' && registration.loading ? (
+        <LoadingState label="Loading signup requirements" />
+      ) : mode === 'register' && registration.error ? (
+        <>
+          <Notice>{registration.error}</Notice>
+          <button
+            type="button"
+            className="btn btn-outline-primary"
+            onClick={registration.retry}
+          >
+            Try again
+          </button>
+        </>
+      ) : (
+        <form onSubmit={onSubmit}>
+          {mode === 'register' && <ProfileFields register />}
+          {['login', 'forgot'].includes(mode) && (
+            <Field
+              id="email"
+              label="Email address"
+              type="email"
+              placeholder="you@example.com"
+              autoComplete="email"
+            />
+          )}
+          {['login', 'register'].includes(mode) && (
+            <PasswordField
+              placeholder={
+                mode === 'login'
+                  ? 'Enter your password'
+                  : 'Create a strong password'
+              }
+              autoComplete={
+                mode === 'login' ? 'current-password' : 'new-password'
+              }
+              minLength={mode === 'login' ? undefined : 8}
+              hint={
+                mode !== 'login'
+                  ? 'At least 8 characters. Maximum 72 bytes.'
+                  : undefined
+              }
+            />
+          )}
+          {mode === 'reset' && (
+            <NewPasswordFields
+              label="Password"
+              confirmationPlaceholder="Enter your password again"
+            />
+          )}
+          {mode === 'register' && registration.required && (
+            <ReferralCodeField />
+          )}
+          {mode === 'login' && (
+            <div className="d-flex justify-content-between align-items-center login-options">
+              <div className="form-check">
+                <input
+                  className="form-check-input"
+                  type="checkbox"
+                  id="remember"
+                  name="remember"
+                />
+                <label className="form-check-label" htmlFor="remember">
+                  Remember me
+                </label>
+              </div>
+              <Link to="/forgot-password">Forgot password?</Link>
             </div>
-            <Link to="/forgot-password">Forgot password?</Link>
-          </div>
-        )}
-        {mode === 'verify' && !code && (
-          <Field
-            id="code"
-            label="Verification code"
-            placeholder="Paste the code from your verification link"
-            autoComplete="off"
-          />
-        )}
-        {mode === 'reset' && !code ? (
-          <Notice>
-            This link is missing its reset code.{' '}
-            <Link to="/forgot-password">Request a new reset link.</Link>
-          </Notice>
-        ) : (
-          <Submit busy={busy} className="w-100">
-            {
+          )}
+          {mode === 'verify' && !code && (
+            <Field
+              id="code"
+              label="Verification code"
+              placeholder="Paste the code from your verification link"
+              autoComplete="off"
+            />
+          )}
+          {mode === 'reset' && !code ? (
+            <Notice>
+              This link is missing its reset code.{' '}
+              <Link to="/forgot-password">Request a new reset link.</Link>
+            </Notice>
+          ) : (
+            <Submit
+              busy={busy}
+              busyLabel={
+                checkingReferral ? 'Checking referral code…' : 'Please wait…'
+              }
+              className="w-100"
+            >
               {
-                login: 'Sign in',
-                register: 'Create account',
-                forgot: 'Send reset link',
-                reset: 'Update password',
-                verify: 'Verify my email',
-              }[mode]
-            }
-            <Icon name="arrow-right" />
-          </Submit>
-        )}
-      </form>
+                {
+                  login: 'Sign in',
+                  register: 'Create account',
+                  forgot: 'Send reset link',
+                  reset: 'Update password',
+                  verify: 'Verify my email',
+                }[mode]
+              }
+              <Icon name="arrow-right" />
+            </Submit>
+          )}
+        </form>
+      )}
       {mode === 'login' ? (
         <>
           <div className="form-divider">

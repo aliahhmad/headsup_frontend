@@ -11,6 +11,7 @@ import Overview from './pages/Overview'
 import Settings from './pages/Settings'
 import ApiKeys from './pages/ApiKeys'
 import AdminUsers from './pages/AdminUsers'
+import AdminSignupSettings from './pages/AdminSignupSettings'
 
 export default function App() {
   const [path, setPath] = useState(
@@ -111,9 +112,13 @@ export default function App() {
         />
       ) : path === '/api-keys' ? (
         <ApiKeys />
-      ) : path === '/admin/users' ? (
+      ) : ['/admin/users', '/admin/signup'].includes(path) ? (
         user.role === 'admin' ? (
-          <AdminUsers currentUser={user} setCurrentUser={setUser} />
+          path === '/admin/signup' ? (
+            <AdminSignupSettings />
+          ) : (
+            <AdminUsers currentUser={user} setCurrentUser={setUser} />
+          )
         ) : (
           <EmptyState
             icon="shield-lock"
@@ -125,7 +130,7 @@ export default function App() {
               </Link>
             }
           >
-            Only administrators can manage user accounts.
+            Only administrators can access this page.
           </EmptyState>
         )
       ) : (
