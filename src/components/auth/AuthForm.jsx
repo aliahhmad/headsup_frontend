@@ -45,6 +45,7 @@ export default function AuthForm({
   onSubmit,
   registration,
   checkingReferral,
+  emailVerified,
 }) {
   const page = content[mode]
   return (
@@ -60,6 +61,11 @@ export default function AuthForm({
           : page.subtitle}
       </p>
       <Notice>{error}</Notice>
+      {emailVerified && (
+        <Notice type="success">
+          Your email is verified. Sign in to continue.
+        </Notice>
+      )}
       {mode === 'register' && registration.loading ? (
         <LoadingState label="Loading signup requirements" />
       ) : mode === 'register' && registration.error ? (

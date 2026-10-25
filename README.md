@@ -108,7 +108,12 @@ database migration and deploy its endpoints before deploying this frontend.
 
 ## Email links
 
-The existing backend verification email points to the API’s `/verify?code=…` route. Following that link verifies the account; then return to the frontend to sign in. The frontend also supports `/verify?code=…`, or pasting the code at `/verify` using “Have a verification code?” on the registration confirmation.
+Verification emails point to the API’s `/verify?code=…` route. Browser requests
+verify the account and redirect to the frontend's `/login?verified=1`, where the
+sign-in form confirms verification. Set `FRONTEND_URL` on the backend to the
+frontend origin. Expired or invalid links return to `/verify?status=expired` or
+`/verify?status=invalid` with an explanation. The frontend also supports manual
+verification at `/verify`, including codes supplied through `/verify?code=…`.
 
 For reset emails to open the frontend, set `FRONTEND_URL=http://localhost:5173` in `api/.env` (use Vite’s actual URL/port), then restart the backend. Its reset route redirects to the frontend’s `/reset-password?code=…`. `BASE_URL` in `api/.env` must also match the running API address. Local emails are available in Mailpit at `http://localhost:8025`.
 

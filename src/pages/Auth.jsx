@@ -7,12 +7,23 @@ import AuthSuccess from '../components/auth/AuthSuccess'
 import useRegistrationSettings from '../hooks/useRegistrationSettings'
 
 export default function Auth({ mode = 'login' }) {
+  const params = new URLSearchParams(window.location.search)
   const [busy, setBusy] = useState(false)
-  const [error, setError] = useState('')
+  const [error, setError] = useState(() =>
+    mode === 'verify'
+      ? {
+          expired:
+            'This verification link has expired. Verification links are valid for 10 minutes.',
+          invalid:
+            'This verification link is invalid or has already been used. If you verified your email earlier, you can sign in.',
+        }[params.get('status')] || ''
+      : '',
+  )
   const [success, setSuccess] = useState(null)
   const [checkingReferral, setCheckingReferral] = useState(false)
   const registration = useRegistrationSettings(mode === 'register')
-  const code = new URLSearchParams(window.location.search).get('code') || ''
+  const code = params.get('code') || ''
+  const emailVerified = mode === 'login' && params.get('verified') === '1'
   async function submit(event) {
     event.preventDefault()
     if (
@@ -123,6 +134,7 @@ export default function Auth({ mode = 'login' }) {
             onSubmit={submit}
             registration={registration}
             checkingReferral={checkingReferral}
+            emailVerified={emailVerified}
           />
         )}
       </div>
