@@ -2,6 +2,18 @@ const API_URL = (import.meta.env.VITE_API_URL || '/api').replace(/\/$/, '')
 const SESSION_KEY = 'headsup.session'
 let refreshRequest
 
+export async function checkHeartbeat(signal) {
+  const response = await fetch(`${API_URL}/heartbeat`, {
+    headers: { Accept: 'application/json' },
+    cache: 'no-store',
+    credentials: 'omit',
+    signal,
+  })
+  if (!response.ok) return false
+  const data = await response.json()
+  return data?.status === 'ok'
+}
+
 export function getSession() {
   try {
     return JSON.parse(

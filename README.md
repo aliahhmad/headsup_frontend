@@ -29,6 +29,15 @@ API_PROXY_TARGET=http://127.0.0.1:8005
 - Admin-only user directory at `/admin/users`, with server-side search and pagination,
   profile/password editing, admin promotion, ban/unban, and confirmed deletion.
 - Responsive navigation, labeled form fields, keyboard focus indicators, loading/error states, and reduced-motion support.
+- A global service-outage banner on every route, including authentication pages.
+
+The outage banner checks the public `/heartbeat` endpoint on startup and about
+every 15 seconds, with a five-second timeout. It also checks when the browser
+comes online, the window receives focus, or the tab becomes visible. It appears
+only after a failed request, a non-success HTTP response, or a response other
+than `{"status":"ok"}`, and disappears when the heartbeat recovers. **Check
+again** retries immediately. Checks use the configured API base URL, bypass the
+cache, and do not attach credentials or change the sign-in session.
 
 The overview clearly marks personal monitoring as upcoming: the backend does not implement monitors, updates, or conversation yet.
 

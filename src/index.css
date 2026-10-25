@@ -56,7 +56,80 @@
 body {
   min-width: 320px;
   margin: 0;
+  padding-top: var(--service-banner-height, 0px);
   font-size: 14px;
+}
+.service-status-banner {
+  position: fixed;
+  inset: 0 0 auto;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  padding: 13px 28px;
+  color: var(--amber-strong);
+  background: var(--amber-soft);
+  border-bottom: 1px solid var(--amber-border);
+  box-shadow: 0 2px 8px #0f172a08;
+}
+.service-status-copy {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.service-status-copy > .bi {
+  font-size: 20px;
+  flex-shrink: 0;
+}
+.service-status-copy strong {
+  display: block;
+  font-size: 12px;
+  line-height: 1.6;
+}
+.service-status-copy span {
+  display: block;
+  font-size: 11px;
+  line-height: 1.6;
+}
+.service-status-retry {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 9px 12px;
+  border: 1px solid var(--amber-border);
+  border-radius: 6px;
+  background: transparent;
+  color: var(--amber-strong);
+  font-size: 11px;
+  font-weight: 600;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.service-status-retry:hover:not(:disabled) {
+  background: #fef3c7;
+}
+.service-status-retry:disabled {
+  opacity: 0.65;
+  cursor: wait;
+}
+@media (max-width: 575px) {
+  .service-status-banner {
+    align-items: flex-start;
+    gap: 10px;
+    padding: 12px 14px;
+    flex-wrap: wrap;
+  }
+  .service-status-copy {
+    align-items: flex-start;
+    gap: 9px;
+    flex: 1 1 230px;
+  }
+  .service-status-retry {
+    min-height: 40px;
+    margin-left: 29px;
+  }
 }
 button,
 input {
@@ -178,7 +251,7 @@ h4 {
   box-shadow: 0 0 0 3px #0d94881f;
 }
 .auth-page {
-  min-height: 100svh;
+  min-height: calc(100svh - var(--service-banner-height, 0px));
   display: flex;
   flex-direction: column;
   background: var(--background);
@@ -636,7 +709,7 @@ h4 {
 }
 .app-shell {
   display: flex;
-  min-height: 100svh;
+  min-height: calc(100svh - var(--service-banner-height, 0px));
 }
 .sidebar {
   color: var(--on-dark);
@@ -647,7 +720,7 @@ h4 {
   display: flex;
   flex-direction: column;
   position: fixed;
-  inset: 0 auto 0 0;
+  inset: var(--service-banner-height, 0px) auto 0 0;
   z-index: 20;
   overflow-y: auto;
 }
@@ -807,7 +880,7 @@ h4 {
   width: calc(100% - 244px);
   display: flex;
   flex-direction: column;
-  min-height: 100svh;
+  min-height: calc(100svh - var(--service-banner-height, 0px));
 }
 .app-topbar {
   height: 78px;
@@ -1706,7 +1779,7 @@ h4 {
   }
   .sidebar-backdrop {
     position: fixed;
-    inset: 0;
+    inset: var(--service-banner-height, 0px) 0 0;
     background: #0f172a80;
     z-index: 19;
     border: 0;

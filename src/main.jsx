@@ -4,9 +4,11 @@ import 'bootstrap/dist/css/bootstrap.min.css'
 import 'bootstrap-icons/font/bootstrap-icons.css'
 import './index.css'
 import App from './App.jsx'
+import ServiceStatusBanner from './components/ServiceStatusBanner.jsx'
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
+    <ServiceStatusBanner />
     <App />
   </StrictMode>,
 )
