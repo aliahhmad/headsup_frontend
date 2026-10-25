@@ -12,6 +12,8 @@ import Settings from './pages/Settings'
 import ApiKeys from './pages/ApiKeys'
 import AdminUsers from './pages/AdminUsers'
 import AdminSignupSettings from './pages/AdminSignupSettings'
+import Home from './pages/Home'
+import ServiceStatusBanner from './components/ServiceStatusBanner'
 
 export default function App() {
   const [path, setPath] = useState(
@@ -22,6 +24,7 @@ export default function App() {
   const [error, setError] = useState('')
   const [retry, setRetry] = useState(0)
   const authMode = authRoutes[path]
+  const isHome = path === '/'
   useEffect(() => {
     const onPath = () => {
       setPath(window.location.pathname.replace(/\/$/, '') || '/')
@@ -39,7 +42,7 @@ export default function App() {
   }, [])
   useEffect(() => {
     let active = true
-    if (session)
+    if (session && !isHome)
       api('/users/me')
         .then((data) => {
           if (active) {
@@ -53,11 +56,10 @@ export default function App() {
     return () => {
       active = false
     }
-  }, [session, retry])
+  }, [session, retry, isHome])
   useEffect(() => {
-    if (session && ['/', '/login', '/register'].includes(path))
-      navigate('/overview')
-    if (!session && !authMode) navigate('/login')
+    if (session && ['/login', '/register'].includes(path)) navigate('/overview')
+    if (!session && !authMode && !isHome) navigate('/login')
     const label =
       navigation.find((item) => item.path === path)?.label ||
       {
@@ -67,10 +69,18 @@ export default function App() {
         verify: 'Verify email',
       }[authMode] ||
       'Sign in'
-    document.title = `${label} · HeadsUp`
-  }, [session, path, authMode])
-  if (authMode && !(session && ['/', '/login', '/register'].includes(path)))
-    return <Auth key={`${path}${window.location.search}`} mode={authMode} />
+    document.title = isHome
+      ? 'HeadsUp · Keep up without keeping tabs.'
+      : `${label} · HeadsUp`
+  }, [session, path, authMode, isHome])
+  if (isHome) return <Home signedIn={Boolean(session)} />
+  if (authMode && !(session && ['/login', '/register'].includes(path)))
+    return (
+      <>
+        <ServiceStatusBanner />
+        <Auth key={`${path}${window.location.search}`} mode={authMode} />
+      </>
+    )
   if (!session) return null
   function signOut() {
     saveSession(null)
@@ -79,73 +89,79 @@ export default function App() {
   }
   const page = navigation.find((item) => item.path === path)
   return (
-    <AppLayout
-      path={path}
-      user={user}
-      title={page?.label || 'Page'}
-      onSignOut={signOut}
-    >
-      {!user ? (
-        error ? (
-          <div className="loading-panel">
-            <Notice>{error}</Notice>
-            <button
-              className="btn btn-primary"
-              onClick={() => setRetry((value) => value + 1)}
-            >
-              Try again
-            </button>
-          </div>
-        ) : (
-          <LoadingState className="loading-panel" label="Loading your account">
-            <p className="text-secondary mt-3">Getting your space ready…</p>
-          </LoadingState>
-        )
-      ) : path === '/overview' ? (
-        <Overview user={user} />
-      ) : ['/profile', '/security'].includes(path) ? (
-        <Settings
-          key={path}
-          user={user}
-          setUser={setUser}
-          security={path === '/security'}
-        />
-      ) : path === '/api-keys' ? (
-        <ApiKeys />
-      ) : ['/admin/users', '/admin/signup'].includes(path) ? (
-        user.role === 'admin' ? (
-          path === '/admin/signup' ? (
-            <AdminSignupSettings />
+    <>
+      <ServiceStatusBanner />
+      <AppLayout
+        path={path}
+        user={user}
+        title={page?.label || 'Page'}
+        onSignOut={signOut}
+      >
+        {!user ? (
+          error ? (
+            <div className="loading-panel">
+              <Notice>{error}</Notice>
+              <button
+                className="btn btn-primary"
+                onClick={() => setRetry((value) => value + 1)}
+              >
+                Try again
+              </button>
+            </div>
           ) : (
-            <AdminUsers currentUser={user} setCurrentUser={setUser} />
+            <LoadingState
+              className="loading-panel"
+              label="Loading your account"
+            >
+              <p className="text-secondary mt-3">Getting your space ready…</p>
+            </LoadingState>
+          )
+        ) : path === '/overview' ? (
+          <Overview user={user} />
+        ) : ['/profile', '/security'].includes(path) ? (
+          <Settings
+            key={path}
+            user={user}
+            setUser={setUser}
+            security={path === '/security'}
+          />
+        ) : path === '/api-keys' ? (
+          <ApiKeys />
+        ) : ['/admin/users', '/admin/signup'].includes(path) ? (
+          user.role === 'admin' ? (
+            path === '/admin/signup' ? (
+              <AdminSignupSettings />
+            ) : (
+              <AdminUsers currentUser={user} setCurrentUser={setUser} />
+            )
+          ) : (
+            <EmptyState
+              icon="shield-lock"
+              heading="h1"
+              title="Admin access required."
+              action={
+                <Link className="btn btn-primary" to="/overview">
+                  Back to your workspace
+                </Link>
+              }
+            >
+              Only administrators can access this page.
+            </EmptyState>
           )
         ) : (
           <EmptyState
-            icon="shield-lock"
             heading="h1"
-            title="Admin access required."
+            title="A little off track."
             action={
               <Link className="btn btn-primary" to="/overview">
                 Back to your workspace
               </Link>
             }
           >
-            Only administrators can access this page.
+            We couldn’t find this page.
           </EmptyState>
-        )
-      ) : (
-        <EmptyState
-          heading="h1"
-          title="A little off track."
-          action={
-            <Link className="btn btn-primary" to="/overview">
-              Back to your workspace
-            </Link>
-          }
-        >
-          We couldn’t find this page.
-        </EmptyState>
-      )}
-    </AppLayout>
+        )}
+      </AppLayout>
+    </>
   )
 }

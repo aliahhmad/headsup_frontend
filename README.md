@@ -43,10 +43,14 @@ copy and action:
 ```jsx
 import EmptyState from './components/ui/EmptyState'
 
-<EmptyState
+;<EmptyState
   icon="plug"
   title="No connections yet."
-  action={<button className="btn btn-primary" onClick={onCreate}>Add connection</button>}
+  action={
+    <button className="btn btn-primary" onClick={onCreate}>
+      Add connection
+    </button>
+  }
 >
   Connect a tool to get started.
 </EmptyState>
@@ -54,6 +58,7 @@ import EmptyState from './components/ui/EmptyState'
 
 ## Included flows
 
+- Public product homepage at `/`, available to visitors and signed-in users.
 - Registration and email verification (new accounts must verify before signing in).
 - Sign-in, optional persistent sessions, automatic token refresh, and sign-out.
 - Password recovery and reset, with matching-password and UTF-8 length validation.
@@ -62,7 +67,23 @@ import EmptyState from './components/ui/EmptyState'
 - Admin-only user directory at `/admin/users`, with server-side search and pagination,
   profile/password editing, admin promotion, ban/unban, and confirmed deletion.
 - Responsive navigation, labeled form fields, keyboard focus indicators, loading/error states, and reduced-motion support.
-- A global service-outage banner on every route, including authentication pages.
+- A service-outage banner on account and authentication routes. The public homepage works independently of the API and does not poll its heartbeat.
+
+## Public homepage
+
+`src/pages/Home.jsx` and its scoped `Home.css` introduce the product using the
+idea overview and marketing guidelines in `../docs/`. The page uses prelaunch
+framing because monitoring is still upcoming. Its primary actions lead to real
+explanation and example sections; Sign in links to `/login`, or to `/overview`
+when a session exists. Visiting `/` never automatically redirects to either.
+
+`src/components/home/` contains the interactive concept workspace and fictional
+example content. Visitors can change topics, inspect example sources, and open
+prepared follow-up answers. These interactions use local UI state and do not
+perform searches, create monitors, or imply live monitoring. The homepage also
+includes mobile navigation, keyboard-accessible topic tabs, and expandable FAQs.
+
+## Service availability
 
 The outage banner checks the public `/heartbeat` endpoint on startup and about
 every 15 seconds, with a five-second timeout. It also checks when the browser
@@ -73,6 +94,8 @@ again** retries immediately. Checks use the configured API base URL, bypass the
 cache, and do not attach credentials or change the sign-in session.
 
 The overview clearly marks personal monitoring as upcoming: the backend does not implement monitors, updates, or conversation yet.
+
+## Account administration
 
 Admins see **Manage users** under **Administration** in the sidebar. The backend
 supplies the current account's role through `/users/me` and enforces admin access

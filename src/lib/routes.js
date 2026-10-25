@@ -1,5 +1,4 @@
 export const authRoutes = {
-  '/': 'login',
   '/login': 'login',
   '/register': 'register',
   '/forgot-password': 'forgot',
