@@ -27,12 +27,12 @@ API_PROXY_TARGET=http://127.0.0.1:8005
   `src/components/UI.jsx` keeps the existing shared UI imports available.
 - `src/components/layout/` contains the workspace shell, sidebar, navigation,
   topbar, and shared footer. `AuthLayout.jsx` composes the authentication shell.
-  Sidebar links are grouped into Workspace, Account, Developer tools, and
+  Sidebar links are grouped into Workspace, Account, and
   Administration (admins only). The brand and account panel remain in place
   while the middle navigation area scrolls, including in the mobile drawer.
 - `src/components/forms/` contains profile and new-password fields shared by
   registration, settings, and user management.
-- `src/components/auth/`, `api-keys/`, `admin/`, and `overview/` contain components
+- `src/components/auth/`, `monitors/`, `admin/`, and `overview/` contain components
   specific to those features. Tables and forms receive data and callbacks so
   they can be composed without duplicating markup or request logic.
 - `src/hooks/useServiceStatus.js` owns heartbeat polling, retries, and cleanup;
@@ -67,7 +67,6 @@ import EmptyState from './components/ui/EmptyState'
 - Password recovery and reset, with matching-password and UTF-8 length validation.
 - Personal overview, name/email editing, and password changes.
 - Owned monitor listing, status filters, pagination, creation, and detail views.
-- API key creation, one-time key display/copy, rename, pause/activate, and confirmed deletion.
 - Admin-only user directory at `/admin/users`, with server-side search and pagination,
   profile/password editing, admin promotion, ban/unban, and confirmed deletion.
 - Responsive navigation, labeled form fields, keyboard focus indicators, loading/error states, and reduced-motion support.
@@ -189,4 +188,4 @@ Fonts load from Google Fonts, with local sans-serif fallbacks. Bootstrap, icons,
 
 Run `npm run lint` and `npm run build` after changes.
 
-The implementation was checked with a production build, desktop/mobile Chrome checks, and real account flows against the local HeadsUp API and Mailpit: registration, verification, sign-in, profile updates, password change/recovery, token refresh, and API key management.
+The implementation was checked with a production build, desktop/mobile Chrome checks, and real account flows against the local HeadsUp API and Mailpit: registration, verification, sign-in, profile updates, password change/recovery, and token refresh.

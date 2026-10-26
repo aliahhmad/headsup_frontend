@@ -119,7 +119,7 @@ export default function UserDialog({ selection, onClose, onSaved }) {
               {action === 'unban' &&
                 'This person will be able to sign in again if their email address is verified.'}
               {action === 'delete' &&
-                'This permanently deletes the account and its API keys. This action cannot be undone.'}
+                'This permanently deletes the account and its associated data. This action cannot be undone.'}
             </p>
           )}
         </div>

@@ -25,7 +25,6 @@ export const navigation = [
     icon: 'shield-check',
     section: 'account',
   },
-  { path: '/api-keys', label: 'API keys', icon: 'key', section: 'developer' },
   {
     path: '/admin/users',
     label: 'Manage users',
@@ -45,7 +44,6 @@ export const navigation = [
 export const navigationSections = [
   { id: 'workspace', label: 'Workspace', ariaLabel: 'Workspace navigation' },
   { id: 'account', label: 'Account', ariaLabel: 'Account settings' },
-  { id: 'developer', label: 'Developer tools', ariaLabel: 'Developer tools' },
   {
     id: 'administration',
     label: 'Administration',

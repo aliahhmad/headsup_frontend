@@ -9,7 +9,6 @@ import LoadingState from './components/ui/LoadingState'
 import Auth from './pages/Auth'
 import Overview from './pages/Overview'
 import Settings from './pages/Settings'
-import ApiKeys from './pages/ApiKeys'
 import AdminUsers from './pages/AdminUsers'
 import AdminSignupSettings from './pages/AdminSignupSettings'
 import Home from './pages/Home'
@@ -145,8 +144,6 @@ export default function App() {
             setUser={setUser}
             security={path === '/security'}
           />
-        ) : path === '/api-keys' ? (
-          <ApiKeys />
         ) : ['/admin/users', '/admin/signup'].includes(path) ? (
           user.role === 'admin' ? (
             path === '/admin/signup' ? (

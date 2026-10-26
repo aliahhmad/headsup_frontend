@@ -35,11 +35,11 @@ export default function Overview({ user }) {
             color: 'tone-teal',
           },
           {
-            icon: 'key',
-            title: 'Connect your tools',
-            text: 'Create and manage API keys for your own apps and integrations.',
-            link: '/api-keys',
-            action: 'Manage API keys',
+            icon: 'binoculars',
+            title: 'Follow your interests',
+            text: 'Keep your ongoing topics together and give each one a clear objective.',
+            link: '/monitors',
+            action: 'View your monitors',
             color: 'tone-amber',
           },
         ].map((card) => (

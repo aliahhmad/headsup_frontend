@@ -1226,16 +1226,14 @@ h4 {
   padding: 24px 28px;
 }
 .settings-card h2,
-.keys-heading h2,
-.new-key-panel h2 {
+.keys-heading h2 {
   font-size: 15px;
   font-weight: 650;
   letter-spacing: -0.3px;
   margin: 0 0 6px;
 }
 .settings-card-heading p,
-.keys-heading p,
-.new-key-panel p {
+.keys-heading p {
   color: var(--muted);
   font-size: 11px;
   margin: 0;
@@ -1393,17 +1391,6 @@ h4 {
 .table tr:last-child td {
   border-bottom: 0;
 }
-.key-name {
-  display: flex;
-  align-items: center;
-  gap: 11px;
-  color: var(--ink);
-}
-.key-name strong {
-  font-weight: 550;
-  max-width: 180px;
-  overflow-wrap: anywhere;
-}
 .key-actions {
   display: flex;
   justify-content: flex-end;
@@ -1434,60 +1421,6 @@ h4 {
   color: var(--amber-strong);
   border-color: var(--amber-border);
   background: var(--amber-soft);
-}
-.new-key-panel {
-  padding: 24px 28px;
-  background: var(--teal-soft);
-  border: 1px solid var(--teal-border);
-  border-radius: 9px;
-  margin-bottom: 24px;
-}
-.new-key-panel > div > .bi {
-  font-size: 23px;
-  color: var(--teal);
-}
-.key-copy-row {
-  display: flex;
-  gap: 15px;
-  align-items: center;
-  margin-top: 20px;
-  background: var(--surface);
-  border: 1px solid var(--teal-border);
-  padding: 12px 14px;
-  border-radius: 6px;
-}
-.key-copy-row code {
-  overflow-wrap: anywhere;
-  color: var(--teal-strong);
-  flex: 1;
-  font-size: 11px;
-}
-.key-copy-row .btn {
-  flex-shrink: 0;
-}
-.delete-confirmation {
-  padding: 22px 24px;
-  background: var(--amber-soft);
-  border: 1px solid var(--amber-border);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 18px;
-  border-radius: 8px;
-}
-.delete-confirmation strong {
-  font-size: 12px;
-  color: var(--amber-strong);
-}
-.delete-confirmation p {
-  font-size: 10px;
-  line-height: 1.8;
-  margin: 7px 0 0;
-  color: var(--amber-strong);
-}
-.delete-confirmation .btn {
-  font-size: 11px;
-  white-space: nowrap;
 }
 
 .admin-users-card {
@@ -2048,19 +1981,6 @@ h4 {
   }
   .empty-state p {
     font-size: 12px;
-  }
-  .new-key-panel {
-    padding: 21px;
-  }
-  .key-copy-row {
-    flex-wrap: wrap;
-  }
-  .key-copy-row code {
-    flex-basis: 100%;
-  }
-  .delete-confirmation {
-    flex-direction: column;
-    align-items: flex-start;
   }
   .table {
     min-width: 660px;
