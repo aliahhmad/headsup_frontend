@@ -11,18 +11,23 @@ export default function NavigationSection({
     <>
       <p className={`nav-section-label ${className}`}>{label}</p>
       <nav aria-label={ariaLabel} className="nav flex-column">
-        {items.map((item) => (
-          <Link
-            key={item.path}
-            to={item.path}
-            className={`nav-link ${path === item.path ? 'active' : ''}`}
-            aria-current={path === item.path ? 'page' : undefined}
-          >
-            <Icon name={item.icon} />
-            {item.label}
-            {path === item.path && <span className="nav-active-dot" />}
-          </Link>
-        ))}
+        {items.map((item) => {
+          const active = path === item.path || path.startsWith(`${item.path}/`)
+          return (
+            <Link
+              key={item.path}
+              to={item.path}
+              className={`nav-link ${active ? 'active' : ''}`}
+              aria-current={
+                active ? (path === item.path ? 'page' : 'location') : undefined
+              }
+            >
+              <Icon name={item.icon} />
+              {item.label}
+              {active && <span className="nav-active-dot" />}
+            </Link>
+          )
+        })}
       </nav>
     </>
   )

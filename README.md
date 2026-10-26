@@ -63,6 +63,7 @@ import EmptyState from './components/ui/EmptyState'
 - Sign-in, optional persistent sessions, automatic token refresh, and sign-out.
 - Password recovery and reset, with matching-password and UTF-8 length validation.
 - Personal overview, name/email editing, and password changes.
+- Owned monitor listing, status filters, pagination, creation, and detail views.
 - API key creation, one-time key display/copy, rename, pause/activate, and confirmed deletion.
 - Admin-only user directory at `/admin/users`, with server-side search and pagination,
   profile/password editing, admin promotion, ban/unban, and confirmed deletion.
@@ -93,7 +94,32 @@ than `{"status":"ok"}`, and disappears when the heartbeat recovers. **Check
 again** retries immediately. Checks use the configured API base URL, bypass the
 cache, and do not attach credentials or change the sign-in session.
 
-The overview clearly marks personal monitoring as upcoming: the backend does not implement monitors, updates, or conversation yet.
+The overview links to the monitor workspace. Monitor configuration is available;
+automatic checking, updates, and live conversation remain upcoming.
+
+## Monitor workspace
+
+- `/monitors` lists the signed-in user's existing monitors through the real
+  paginated API, with active/paused/archived filters and refresh/retry controls.
+- `/monitors/new` posts a monitor name, objective, and check interval. Intervals
+  include presets and a custom number of minutes, hours, or days, capped at the
+  backend's 365-day maximum. Successful creation opens that monitor. Input is
+  preserved on failure, and repeated submission while saving is prevented.
+- `/monitors/{id}` shows the name, objective, status, saved check interval,
+  next due time, and creation/update times beside the conversation layout.
+  The composer accepts a local draft, with Send disabled and a clear notice
+  that messaging is unavailable and drafts are not saved.
+
+`src/lib/monitors.js` selects only displayable configuration fields from API
+responses before storing them in page state. Internal memories, context,
+knowledge, chat summaries, and run snapshots are not retained or rendered by
+these screens. The API still returns its existing detailed payload to the
+authorized account; this is a presentation boundary, not server-side redaction.
+
+The initial creation form does not expose memory fields. These screens do not
+edit/delete monitors, start checks, send chat messages, or display fictional
+findings. Automatic checking and messaging are labeled as upcoming. Times use
+the browser's local timezone.
 
 ## Account administration
 

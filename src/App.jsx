@@ -14,6 +14,9 @@ import AdminUsers from './pages/AdminUsers'
 import AdminSignupSettings from './pages/AdminSignupSettings'
 import Home from './pages/Home'
 import ServiceStatusBanner from './components/ServiceStatusBanner'
+import Monitors from './pages/Monitors'
+import CreateMonitor from './pages/CreateMonitor'
+import MonitorDetail from './pages/MonitorDetail'
 
 export default function App() {
   const [path, setPath] = useState(
@@ -25,6 +28,7 @@ export default function App() {
   const [retry, setRetry] = useState(0)
   const authMode = authRoutes[path]
   const isHome = path === '/'
+  const monitorId = path.match(/^\/monitors\/([^/]+)$/)?.[1]
   useEffect(() => {
     const onPath = () => {
       setPath(window.location.pathname.replace(/\/$/, '') || '/')
@@ -61,7 +65,11 @@ export default function App() {
     if (session && ['/login', '/register'].includes(path)) navigate('/overview')
     if (!session && !authMode && !isHome) navigate('/login')
     const label =
-      navigation.find((item) => item.path === path)?.label ||
+      (path === '/monitors/new'
+        ? 'Create monitor'
+        : monitorId
+          ? 'Monitor'
+          : navigation.find((item) => item.path === path)?.label) ||
       {
         register: 'Create account',
         forgot: 'Reset password',
@@ -72,7 +80,7 @@ export default function App() {
     document.title = isHome
       ? 'HeadsUp · Keep up without keeping tabs.'
       : `${label} · HeadsUp`
-  }, [session, path, authMode, isHome])
+  }, [session, path, authMode, isHome, monitorId])
   if (isHome) return <Home signedIn={Boolean(session)} />
   if (authMode && !(session && ['/login', '/register'].includes(path)))
     return (
@@ -87,14 +95,20 @@ export default function App() {
     setError('')
     navigate('/login')
   }
-  const page = navigation.find((item) => item.path === path)
+  const page = navigation.find(
+    (item) =>
+      item.path === path ||
+      (item.path === '/monitors' && path.startsWith('/monitors/')),
+  )
   return (
     <>
       <ServiceStatusBanner />
       <AppLayout
         path={path}
         user={user}
-        title={page?.label || 'Page'}
+        title={
+          path === '/monitors/new' ? 'Create monitor' : page?.label || 'Page'
+        }
         onSignOut={signOut}
       >
         {!user ? (
@@ -118,6 +132,12 @@ export default function App() {
           )
         ) : path === '/overview' ? (
           <Overview user={user} />
+        ) : path === '/monitors' ? (
+          <Monitors />
+        ) : path === '/monitors/new' ? (
+          <CreateMonitor />
+        ) : monitorId ? (
+          <MonitorDetail key={monitorId} monitorId={monitorId} />
         ) : ['/profile', '/security'].includes(path) ? (
           <Settings
             key={path}

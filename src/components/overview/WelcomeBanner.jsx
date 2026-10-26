@@ -1,4 +1,5 @@
 import Icon from '../ui/Icon'
+import Link from '../ui/Link'
 
 export default function WelcomeBanner() {
   return (
@@ -14,11 +15,14 @@ export default function WelcomeBanner() {
           <span>Less noise.</span>
         </h2>
         <p>
-          HeadsUp is taking shape around a simple idea: keep an eye on what
-          matters, and speak up when it changes.
+          Give the topics you care about a place to live. Create a monitor, set
+          its direction, and keep everything together.
         </p>
-        <span className="coming-soon-label">
-          <Icon name="stars" /> Personal monitoring is on the way
+        <Link to="/monitors" className="btn btn-primary mt-2">
+          Explore your monitors <Icon name="arrow-right" />
+        </Link>
+        <span className="coming-soon-label mt-2">
+          <Icon name="stars" /> Automatic checks and messaging are on the way
         </span>
       </div>
       <div className="banner-radar" aria-hidden="true">
