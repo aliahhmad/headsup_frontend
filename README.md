@@ -27,6 +27,9 @@ API_PROXY_TARGET=http://127.0.0.1:8005
   `src/components/UI.jsx` keeps the existing shared UI imports available.
 - `src/components/layout/` contains the workspace shell, sidebar, navigation,
   topbar, and shared footer. `AuthLayout.jsx` composes the authentication shell.
+  Sidebar links are grouped into Workspace, Account, Developer tools, and
+  Administration (admins only). The brand and account panel remain in place
+  while the middle navigation area scrolls, including in the mobile drawer.
 - `src/components/forms/` contains profile and new-password fields shared by
   registration, settings, and user management.
 - `src/components/auth/`, `api-keys/`, `admin/`, and `overview/` contain components

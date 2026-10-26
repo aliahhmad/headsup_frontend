@@ -8,8 +8,8 @@ export default function NavigationSection({
   className = '',
 }) {
   return (
-    <>
-      <p className={`nav-section-label ${className}`}>{label}</p>
+    <div className={`sidebar-section ${className}`}>
+      <p className="nav-section-label">{label}</p>
       <nav aria-label={ariaLabel} className="nav flex-column">
         {items.map((item) => {
           const active = path === item.path || path.startsWith(`${item.path}/`)
@@ -29,6 +29,6 @@ export default function NavigationSection({
           )
         })}
       </nav>
-    </>
+    </div>
   )
 }
