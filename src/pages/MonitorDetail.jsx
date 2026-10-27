@@ -4,6 +4,7 @@ import EmptyState from '../components/ui/EmptyState'
 import LoadingState from '../components/ui/LoadingState'
 import MonitorStatus from '../components/monitors/MonitorStatus'
 import MonitorChat from '../components/monitors/MonitorChat'
+import MonitorCheck from '../components/monitors/MonitorCheck'
 import {
   formatCheckInterval,
   formatMonitorDate,
@@ -91,6 +92,12 @@ export default function MonitorDetail({ monitorId }) {
                 className="monitor-configuration-column"
                 aria-label="Monitor configuration"
               >
+                <MonitorCheck
+                  key={monitor.id}
+                  monitorId={monitor.id}
+                  status={monitor.status}
+                  initialRun={monitor.latest_run}
+                />
                 <section
                   className="card monitor-configuration"
                   aria-labelledby="monitor-configuration-heading"
@@ -157,11 +164,10 @@ export default function MonitorDetail({ monitorId }) {
                 <div className="monitor-availability-note">
                   <Icon name="hourglass-split" />
                   <div>
-                    <strong>Your topic has a place.</strong>
+                    <strong>Check whenever you need.</strong>
                     <p>
-                      Automatic checks and messaging are coming next. The
-                      interval above is saved for when checking becomes
-                      available.
+                      Use Check now to request fresh research. Automatic checks
+                      and messaging are coming next.
                     </p>
                   </div>
                 </div>

@@ -595,6 +595,39 @@
   display: grid;
   gap: 18px;
 }
+.monitor-check .monitor-panel-heading {
+  flex-wrap: wrap;
+}
+.monitor-check .btn {
+  white-space: nowrap;
+}
+.monitor-check-body {
+  padding: 22px 24px;
+}
+.monitor-check-message {
+  color: #42516a;
+  font-size: 12px;
+  line-height: 1.8;
+  margin: 12px 0 4px;
+}
+.monitor-check-body time,
+.monitor-check-help {
+  color: var(--muted);
+  font-size: 11px;
+  line-height: 1.8;
+}
+.monitor-check-help {
+  margin: 14px 0 0;
+}
+.monitor-check-body .alert {
+  font-size: 12px;
+  margin: 16px 0 0;
+}
+.status-monitor-failed {
+  background: #fff1f2;
+  border-color: #fecdd3;
+  color: #be123c;
+}
 .monitor-configuration-body {
   padding: 24px;
 }

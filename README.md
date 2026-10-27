@@ -109,17 +109,32 @@ automatic checking, updates, and live conversation remain upcoming.
   preserved on failure, and repeated submission while saving is prevented.
 - `/monitors/{id}` shows the name, objective, status, saved check interval,
   next due time, and creation/update times beside the conversation layout.
+  **Check now** queues a manual research run and refreshes its status every five
+  seconds while queued or running. The button is disabled during submission,
+  while a check is in progress, and for archived monitors. Paused monitors can
+  still request manual checks. Failed submissions retain their request ID so
+  retries cannot accidentally create duplicate runs.
   The composer accepts a local draft, with Send disabled and a clear notice
   that messaging is unavailable and drafts are not saved.
 
-`src/lib/monitors.js` selects only displayable configuration fields from API
+Run the research worker separately from `api/` to process queued checks:
+
+```sh
+uv run --locked python -m app.api_admin worker
+```
+
+The button only queues work; it does not start the worker. Research failures
+appear as a failed check, and users can request a new check. The backend's manual
+check cooldown is enforced and API errors appear beside the button.
+
+`src/lib/monitors.js` selects only displayable configuration and run-status fields from API
 responses before storing them in page state. Internal memories, context,
 knowledge, chat summaries, and run snapshots are not retained or rendered by
 these screens. The API still returns its existing detailed payload to the
 authorized account; this is a presentation boundary, not server-side redaction.
 
 The initial creation form does not expose memory fields. These screens do not
-edit/delete monitors, start checks, send chat messages, or display fictional
+edit/delete monitors, send chat messages, or display fictional
 findings. Automatic checking and messaging are labeled as upcoming. Times use
 the browser's local timezone.
 

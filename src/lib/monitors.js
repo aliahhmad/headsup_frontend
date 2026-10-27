@@ -15,6 +15,17 @@ function configuration(data) {
   }
 }
 
+function runStatus(data) {
+  if (!data) return null
+  return {
+    id: data.id,
+    status: data.status,
+    created_at: data.created_at,
+    started_at: data.started_at,
+    completed_at: data.completed_at,
+  }
+}
+
 export async function listMonitors({ page, size, status }) {
   const params = new URLSearchParams({ page: String(page), size: String(size) })
   if (status) params.set('status', status)
@@ -27,7 +38,24 @@ export async function listMonitors({ page, size, status }) {
 }
 
 export async function getMonitor(id) {
-  return configuration(await api(`/monitors/${encodeURIComponent(id)}`))
+  const data = await api(`/monitors/${encodeURIComponent(id)}`)
+  return { ...configuration(data), latest_run: runStatus(data.latest_run) }
+}
+
+export async function checkMonitor(id, clientRequestId) {
+  const data = await api(`/monitors/${encodeURIComponent(id)}/checks`, {
+    method: 'POST',
+    body: { client_request_id: clientRequestId },
+  })
+  return runStatus(data)
+}
+
+export async function getMonitorRun(monitorId, runId) {
+  return runStatus(
+    await api(
+      `/monitors/${encodeURIComponent(monitorId)}/runs/${encodeURIComponent(runId)}`,
+    ),
+  )
 }
 
 export async function createMonitor(data) {

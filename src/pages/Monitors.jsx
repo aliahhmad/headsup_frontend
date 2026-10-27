@@ -68,8 +68,8 @@ export default function Monitors() {
         <div>
           <strong>Start with what matters to you.</strong>
           <p>
-            Save your topics and their schedules. Automatic checks and messaging
-            are coming next.
+            Open a topic to request a manual check. Automatic checks and
+            messaging are coming next.
           </p>
         </div>
       </div>
