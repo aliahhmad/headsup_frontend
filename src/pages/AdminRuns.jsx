@@ -54,6 +54,7 @@ export default function AdminRuns() {
   return <div className="run-dashboard">
     <PageHeading eyebrow="ADMINISTRATION / EXECUTIONS" title="Monitor runs"
       action={<div className="run-refresh-controls">
+        <Link className="btn btn-outline-primary" to="/admin/queue"><Icon name="collection-play" /> Manage queue</Link>
         <label><input type="checkbox" checked={live} onChange={(event) => setLive(event.target.checked)} /> Live refresh</label>
         <button className="btn btn-outline-primary" type="button" onClick={() => setRefresh((value) => value + 1)}><Icon name="arrow-clockwise" /> Refresh</button>
       </div>}>

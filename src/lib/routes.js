@@ -40,6 +40,10 @@ export const navigation = [
     admin: true,
   },
   {
+    path: '/admin/queue', label: 'Queue', icon: 'collection-play',
+    section: 'administration', admin: true,
+  },
+  {
     path: '/admin/runs', label: 'Monitor runs', icon: 'activity',
     section: 'administration', admin: true,
   },

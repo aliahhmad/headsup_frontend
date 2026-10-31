@@ -12,6 +12,7 @@ import Settings from './pages/Settings'
 import AdminUsers from './pages/AdminUsers'
 import AdminSignupSettings from './pages/AdminSignupSettings'
 import AdminRuns from './pages/AdminRuns'
+import AdminQueue from './pages/AdminQueue'
 import AdminRunDetail from './pages/AdminRunDetail'
 import Home from './pages/Home'
 import ServiceStatusBanner from './components/ServiceStatusBanner'
@@ -149,10 +150,12 @@ export default function App() {
             setUser={setUser}
             security={path === '/security'}
           />
-        ) : ['/admin/users', '/admin/signup'].includes(path) || isRunAdmin ? (
+        ) : ['/admin/users', '/admin/signup', '/admin/queue'].includes(path) || isRunAdmin ? (
           user.role === 'admin' ? (
             isRunAdmin ? (
               runId ? <AdminRunDetail key={runId} runId={runId} /> : <AdminRuns />
+            ) : path === '/admin/queue' ? (
+              <AdminQueue />
             ) : path === '/admin/signup' ? (
               <AdminSignupSettings />
             ) : (
