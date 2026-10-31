@@ -39,6 +39,10 @@ export const navigation = [
     section: 'administration',
     admin: true,
   },
+  {
+    path: '/admin/runs', label: 'Monitor runs', icon: 'activity',
+    section: 'administration', admin: true,
+  },
 ]
 
 export const navigationSections = [

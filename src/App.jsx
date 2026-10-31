@@ -11,6 +11,8 @@ import Overview from './pages/Overview'
 import Settings from './pages/Settings'
 import AdminUsers from './pages/AdminUsers'
 import AdminSignupSettings from './pages/AdminSignupSettings'
+import AdminRuns from './pages/AdminRuns'
+import AdminRunDetail from './pages/AdminRunDetail'
 import Home from './pages/Home'
 import ServiceStatusBanner from './components/ServiceStatusBanner'
 import Monitors from './pages/Monitors'
@@ -28,6 +30,8 @@ export default function App() {
   const authMode = authRoutes[path]
   const isHome = path === '/'
   const monitorId = path.match(/^\/monitors\/([^/]+)$/)?.[1]
+  const runId = path.match(/^\/admin\/runs\/([^/]+)$/)?.[1]
+  const isRunAdmin = path === '/admin/runs' || Boolean(runId)
   useEffect(() => {
     const onPath = () => {
       setPath(window.location.pathname.replace(/\/$/, '') || '/')
@@ -68,7 +72,7 @@ export default function App() {
         ? 'Create monitor'
         : monitorId
           ? 'Monitor'
-          : navigation.find((item) => item.path === path)?.label) ||
+          : runId ? 'Run inspection' : navigation.find((item) => item.path === path)?.label) ||
       {
         register: 'Create account',
         forgot: 'Reset password',
@@ -79,7 +83,7 @@ export default function App() {
     document.title = isHome
       ? 'HeadsUp · Keep up without keeping tabs.'
       : `${label} · HeadsUp`
-  }, [session, path, authMode, isHome, monitorId])
+  }, [session, path, authMode, isHome, monitorId, runId])
   if (isHome) return <Home signedIn={Boolean(session)} />
   if (authMode && !(session && ['/login', '/register'].includes(path)))
     return (
@@ -97,7 +101,8 @@ export default function App() {
   const page = navigation.find(
     (item) =>
       item.path === path ||
-      (item.path === '/monitors' && path.startsWith('/monitors/')),
+      (item.path === '/monitors' && path.startsWith('/monitors/')) ||
+      (item.path === '/admin/runs' && path.startsWith('/admin/runs/')),
   )
   return (
     <>
@@ -144,9 +149,11 @@ export default function App() {
             setUser={setUser}
             security={path === '/security'}
           />
-        ) : ['/admin/users', '/admin/signup'].includes(path) ? (
+        ) : ['/admin/users', '/admin/signup'].includes(path) || isRunAdmin ? (
           user.role === 'admin' ? (
-            path === '/admin/signup' ? (
+            isRunAdmin ? (
+              runId ? <AdminRunDetail key={runId} runId={runId} /> : <AdminRuns />
+            ) : path === '/admin/signup' ? (
               <AdminSignupSettings />
             ) : (
               <AdminUsers currentUser={user} setCurrentUser={setUser} />
