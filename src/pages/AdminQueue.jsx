@@ -100,7 +100,7 @@ export default function AdminQueue() {
       <div className="queue-controls">
         <RunPanel title="Automatic processing" aside={<RunBadge status={automatic ? 'running' : 'paused'} />}>
           <p>When enabled, the worker checks for available work every five seconds and processes one item at a time.</p>
-          <p className="text-secondary">Turning it off lets the current item finish. It does not delete queued checks or change monitor schedules.</p>
+          <p className="text-secondary">Turning it off lets the current item finish. Active monitors keep scheduling checks, which wait in the queue. Pause a monitor to stop its schedule.</p>
           <button className={`btn ${automatic ? 'btn-outline-primary' : 'btn-primary'}`} type="button"
             disabled={Boolean(busy) || (!automatic && (!state.provider_configured || pending?.mode === 'manual'))}
             onClick={() => perform('automatic')}>

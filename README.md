@@ -64,7 +64,10 @@ Automatic processing defaults to off for new databases, and a saved enabled mode
 resumes after API restart. Model access is required for live processing, and a
 successful check does not necessarily produce an alert.
 
-Monitor intervals are persisted but recurring enqueueing is not implemented.
+Active monitors automatically queue recurring checks at their saved intervals.
+The API must be running; administrator queue controls govern when checks execute.
+Overlapping checks are coalesced, and downtime produces one catch-up check rather
+than replaying every missed interval.
 The conversation area accepts an unsaved local draft with Send disabled; chat
 processing is deferred. Public homepage examples are synthetic local interactions
 and do not perform research. See the [backend feature guides](../api/docs/index.md)

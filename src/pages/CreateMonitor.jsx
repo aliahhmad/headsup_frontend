@@ -193,8 +193,8 @@ export default function CreateMonitor() {
                 id="monitor-schedule-help"
                 className="form-text monitor-schedule-help"
               >
-                <Icon name="info-circle" /> This saves your preferred interval.
-                Automatic checks aren’t available yet.
+                <Icon name="info-circle" /> Active monitors queue checks at this
+                interval. Processing starts when an administrator runs the queue.
               </p>
             </fieldset>
             <div className="monitor-form-actions">
