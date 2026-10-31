@@ -40,6 +40,7 @@ export default function AppLayout({ path, user, title, onSignOut, children }) {
       )}
       <div className="app-content">
         <Topbar
+          user={user}
           title={title}
           menuOpen={menuOpen}
           onOpenMenu={() => setMenuOpen(true)}

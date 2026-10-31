@@ -18,6 +18,7 @@ export const navigation = [
     icon: 'binoculars',
     section: 'workspace',
   },
+  { path: '/notifications', label: 'Notifications', icon: 'bell', section: 'workspace', sidebar: false },
   { path: '/profile', label: 'My profile', icon: 'person', section: 'account' },
   {
     path: '/security',

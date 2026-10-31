@@ -10,12 +10,15 @@ import {
   formatCheckInterval,
   formatMonitorDate,
   getMonitor,
+  updateMonitorStatus,
 } from '../lib/monitors'
 import './Monitors.css'
 
 export default function MonitorDetail({ monitorId }) {
   const [retry, setRetry] = useState(0)
   const [result, setResult] = useState(null)
+  const [changingStatus, setChangingStatus] = useState(false)
+  const [statusError, setStatusError] = useState('')
   const requestKey = JSON.stringify([monitorId, retry])
   const loading = result?.key !== requestKey
   const monitor = loading ? null : result?.data
@@ -34,6 +37,17 @@ export default function MonitorDetail({ monitorId }) {
       active = false
     }
   }, [monitorId, requestKey])
+
+  async function changeStatus() {
+    if (!monitor || changingStatus) return
+    setChangingStatus(true)
+    setStatusError('')
+    try {
+      const data = await updateMonitorStatus(monitor.id, monitor.status === 'active' ? 'paused' : 'active', monitor.version)
+      setResult({ key: requestKey, data })
+    } catch (error) { setStatusError(error.message) }
+    finally { setChangingStatus(false) }
+  }
 
   return (
     <div className="monitors-page">
@@ -83,10 +97,16 @@ export default function MonitorDetail({ monitorId }) {
             <PageHeading
               eyebrow="YOUR MONITOR"
               title={monitor.name}
-              action={<MonitorStatus status={monitor.status} />}
+              action={<div className="d-flex align-items-center gap-3 flex-wrap">
+                <MonitorStatus status={monitor.status} />
+                <button type="button" className="btn btn-outline-primary" disabled={changingStatus} onClick={changeStatus}>
+                  <Icon name={monitor.status === 'active' ? 'pause-circle' : 'play-circle'} /> {changingStatus ? 'Saving…' : monitor.status === 'active' ? 'Pause monitor' : 'Activate monitor'}
+                </button>
+              </div>}
             >
               Your topic and its conversation, in one place.
             </PageHeading>
+            <Notice>{statusError}</Notice>
             <div className="monitor-detail-layout">
               <div className="monitor-updates-column">
                 <MonitorAlerts key={monitor.id} monitorId={monitor.id} />
@@ -97,7 +117,7 @@ export default function MonitorDetail({ monitorId }) {
                 aria-label="Monitor configuration"
               >
                 <MonitorCheck
-                  key={monitor.id}
+                  key={`${monitor.id}:${monitor.version}`}
                   monitorId={monitor.id}
                   status={monitor.status}
                   initialRun={monitor.latest_run}

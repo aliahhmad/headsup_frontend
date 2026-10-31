@@ -19,6 +19,7 @@ import ServiceStatusBanner from './components/ServiceStatusBanner'
 import Monitors from './pages/Monitors'
 import CreateMonitor from './pages/CreateMonitor'
 import MonitorDetail from './pages/MonitorDetail'
+import Notifications from './pages/Notifications'
 
 export default function App() {
   const [path, setPath] = useState(
@@ -137,6 +138,8 @@ export default function App() {
           )
         ) : path === '/overview' ? (
           <Overview user={user} />
+        ) : path === '/notifications' ? (
+          <Notifications key={user.id} />
         ) : path === '/monitors' ? (
           <Monitors />
         ) : path === '/monitors/new' ? (

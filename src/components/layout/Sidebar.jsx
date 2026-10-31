@@ -35,6 +35,7 @@ export default function Sidebar({ path, user, menuOpen, onClose }) {
         {navigationSections.map((section) => {
           const items = navigation.filter(
             (item) =>
+              item.sidebar !== false &&
               item.section === section.id &&
               (!item.admin || user?.role === 'admin'),
           )

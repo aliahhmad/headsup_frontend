@@ -2,7 +2,7 @@ import { useCallback, useEffect, useState } from 'react'
 import { Icon, Notice } from '../UI'
 import MonitorAlertDetail from './MonitorAlertDetail'
 import {
-  formatMonitorDate, listMonitorAlerts,
+  formatMonitorDate, getMonitorAlert, listMonitorAlerts,
 } from '../../lib/monitors'
 
 export default function MonitorAlerts({ monitorId }) {
@@ -10,6 +10,31 @@ export default function MonitorAlerts({ monitorId }) {
   const [result, setResult] = useState(null)
   const [selected, setSelected] = useState(null)
   const [error, setError] = useState('')
+  const [linkError, setLinkError] = useState('')
+  const [requestedAlert, setRequestedAlert] = useState(() => new URLSearchParams(window.location.search).get('alert'))
+
+  useEffect(() => {
+    function onNavigate() { setRequestedAlert(new URLSearchParams(window.location.search).get('alert')) }
+    window.addEventListener('popstate', onNavigate)
+    return () => window.removeEventListener('popstate', onNavigate)
+  }, [])
+
+  useEffect(() => {
+    if (!requestedAlert) return
+    let active = true
+    getMonitorAlert(monitorId, requestedAlert)
+      .then((alert) => { if (active) { setSelected(alert); setLinkError('') } })
+      .catch((error) => { if (active) setLinkError(`Couldn’t open this update. ${error.message}`) })
+    return () => { active = false }
+  }, [monitorId, requestedAlert])
+
+  function closeUpdate() {
+    setSelected(null)
+    setRequestedAlert(null)
+    const url = new URL(window.location.href)
+    url.searchParams.delete('alert')
+    window.history.replaceState({}, '', `${url.pathname}${url.search}${url.hash}`)
+  }
 
   useEffect(() => {
     let active = true
@@ -53,7 +78,7 @@ export default function MonitorAlerts({ monitorId }) {
         {current && <span className="monitor-alert-count">{current.total} {current.total === 1 ? 'update' : 'updates'}</span>}
       </header>
       <div className="monitor-alerts-body">
-        <Notice>{error}</Notice>
+        <Notice>{linkError || error}</Notice>
         {!current && !error && <p role="status">Loading updates…</p>}
         {current?.items.length === 0 && <p>No alerts yet. Updates will appear when a check finds something worth your attention.</p>}
         {current?.items.map((alert) => (
@@ -85,7 +110,7 @@ export default function MonitorAlerts({ monitorId }) {
       </div>
       {selected && (
         <MonitorAlertDetail key={selected.id} monitorId={monitorId} alert={selected}
-          onRead={handleRead} onClose={() => setSelected(null)} />
+          onRead={handleRead} onClose={closeUpdate} />
       )}
     </section>
   )

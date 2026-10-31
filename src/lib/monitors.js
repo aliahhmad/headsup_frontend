@@ -1,10 +1,12 @@
 import { api } from './api'
+import { notificationsChanged } from './notifications'
 
 // Only retain fields intended for the monitor screens. Detail responses also
 // contain internal memory, chat summaries, and run snapshots; don't retain them.
 function configuration(data) {
   return {
     id: data.id,
+    version: data.version,
     name: data.name,
     objective: data.objective,
     status: data.status,
@@ -68,15 +70,26 @@ export function getMonitorAlert(monitorId, alertId) {
   return api(`/monitors/${encodeURIComponent(monitorId)}/alerts/${encodeURIComponent(alertId)}`)
 }
 
-export function markMonitorAlertRead(monitorId, alertId) {
-  return api(`/monitors/${encodeURIComponent(monitorId)}/alerts/${encodeURIComponent(alertId)}`, {
+export async function markMonitorAlertRead(monitorId, alertId) {
+  const updated = await api(`/monitors/${encodeURIComponent(monitorId)}/alerts/${encodeURIComponent(alertId)}`, {
     method: 'PATCH', body: { read: true },
   })
+  notificationsChanged()
+  return updated
 }
 
 export async function createMonitor(data) {
   const created = await api('/monitors', { method: 'POST', body: data })
+  notificationsChanged()
   return { id: created.id }
+}
+
+export async function updateMonitorStatus(id, status, expectedVersion) {
+  const data = await api(`/monitors/${encodeURIComponent(id)}`, {
+    method: 'PATCH', body: { status, expected_version: expectedVersion },
+  })
+  notificationsChanged()
+  return { ...configuration(data), latest_run: runStatus(data.latest_run) }
 }
 
 export function formatCheckInterval(seconds) {
