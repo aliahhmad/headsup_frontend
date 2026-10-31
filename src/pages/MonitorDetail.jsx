@@ -5,6 +5,7 @@ import LoadingState from '../components/ui/LoadingState'
 import MonitorStatus from '../components/monitors/MonitorStatus'
 import MonitorChat from '../components/monitors/MonitorChat'
 import MonitorCheck from '../components/monitors/MonitorCheck'
+import MonitorAlerts from '../components/monitors/MonitorAlerts'
 import {
   formatCheckInterval,
   formatMonitorDate,
@@ -87,7 +88,10 @@ export default function MonitorDetail({ monitorId }) {
               Your topic and its conversation, in one place.
             </PageHeading>
             <div className="monitor-detail-layout">
-              <MonitorChat key={monitor.id} />
+              <div className="monitor-updates-column">
+                <MonitorAlerts key={monitor.id} monitorId={monitor.id} />
+                <MonitorChat key={monitor.id} />
+              </div>
               <aside
                 className="monitor-configuration-column"
                 aria-label="Monitor configuration"

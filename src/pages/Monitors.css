@@ -874,3 +874,41 @@
     gap: 12px;
   }
 }
+.monitor-updates-column {
+  display: grid;
+  gap: 1.5rem;
+  min-width: 0;
+  align-content: start;
+}
+
+.monitor-alerts-body {
+  padding: 1.5rem;
+}
+
+.monitor-alert-item + .monitor-alert-item {
+  border-top: 1px solid var(--bs-border-color);
+  margin-top: 1.5rem;
+  padding-top: 1.5rem;
+}
+
+.monitor-alert-title {
+  display: flex;
+  align-items: baseline;
+  gap: 0.75rem;
+}
+
+.monitor-alert-title h3 {
+  font-size: 1.1rem;
+  overflow-wrap: anywhere;
+}
+
+.monitor-alert-message {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  margin-top: 0.75rem;
+}
+
+.monitor-alert-evidence {
+  margin-top: 1rem;
+  overflow-wrap: anywhere;
+}

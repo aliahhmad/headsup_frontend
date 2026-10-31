@@ -47,9 +47,10 @@ export default function MonitorCheck({ monitorId, status, initialRun }) {
   const archived = status === 'archived'
   const runId = run?.id
   const state = states[run?.status]
+  const alertState = run?.alert_processing?.status
 
   useEffect(() => {
-    if (!pending || !runId) return
+    if (!runId) return
     let active = true
     let timer
     async function refresh() {
@@ -58,6 +59,9 @@ export default function MonitorCheck({ monitorId, status, initialRun }) {
         if (!active) return
         setRun(updated)
         setRefreshError('')
+        const researchPending = updated.status === 'queued' || updated.status === 'running'
+        const alertPending = ['pending', 'processing'].includes(updated.alert_processing?.status)
+        if (!researchPending && !alertPending) return
       } catch (err) {
         if (!active) return
         setRefreshError(`Couldn’t refresh the check status. ${err.message}`)
@@ -69,7 +73,7 @@ export default function MonitorCheck({ monitorId, status, initialRun }) {
       active = false
       window.clearTimeout(timer)
     }
-  }, [monitorId, runId, pending])
+  }, [monitorId, runId])
 
   async function handleCheck() {
     if (submitting.current || pending || archived) return
@@ -107,6 +111,21 @@ export default function MonitorCheck({ monitorId, status, initialRun }) {
             <p>Look for new developments.</p>
           </div>
         </div>
+        {run?.status === 'succeeded' && (
+          <p className="monitor-check-message" role="status">
+            {alertState === 'pending' || alertState === 'processing'
+              ? 'Research is saved. Your update is being evaluated.'
+              : alertState === 'failed'
+                ? 'Research is saved, but preparing the update failed.'
+                : alertState === 'published'
+                  ? 'A new update is available in Updates.'
+                  : alertState === 'skipped'
+                    ? 'No alert was needed for this check.'
+                    : alertState === 'cancelled'
+                      ? 'Update preparation was cancelled because this monitor changed.'
+                      : null}
+          </p>
+        )}
         <button
           type="button"
           className="btn btn-primary btn-sm"

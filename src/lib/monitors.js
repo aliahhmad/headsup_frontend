@@ -23,6 +23,8 @@ function runStatus(data) {
     created_at: data.created_at,
     started_at: data.started_at,
     completed_at: data.completed_at,
+    alert_processing: data.alert_processing || null,
+    alert: data.alert || null,
   }
 }
 
@@ -56,6 +58,20 @@ export async function getMonitorRun(monitorId, runId) {
       `/monitors/${encodeURIComponent(monitorId)}/runs/${encodeURIComponent(runId)}`,
     ),
   )
+}
+
+export function listMonitorAlerts(monitorId, page = 1) {
+  return api(`/monitors/${encodeURIComponent(monitorId)}/alerts?page=${page}&size=10`)
+}
+
+export function getMonitorAlert(monitorId, alertId) {
+  return api(`/monitors/${encodeURIComponent(monitorId)}/alerts/${encodeURIComponent(alertId)}`)
+}
+
+export function updateMonitorAlert(monitorId, alertId, changes) {
+  return api(`/monitors/${encodeURIComponent(monitorId)}/alerts/${encodeURIComponent(alertId)}`, {
+    method: 'PATCH', body: changes,
+  })
 }
 
 export async function createMonitor(data) {
