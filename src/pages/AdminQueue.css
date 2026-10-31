@@ -1,4 +1,5 @@
 .queue-metrics { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+.queue-dashboard > .run-panel + .run-panel { margin-top: 1.5rem; }
 .queue-controls { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1.5rem; margin-bottom: 1.5rem; }
 .queue-controls .run-panel { margin-bottom: 0; }
 .queue-controls .run-panel-body { display: flex; flex-direction: column; align-items: flex-start; height: calc(100% - 4.25rem); }

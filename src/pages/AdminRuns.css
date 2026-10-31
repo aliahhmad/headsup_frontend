@@ -31,6 +31,7 @@
 .run-table { width: 100%; min-width: 1180px; border-collapse: collapse; font-size: 12px; }
 .run-table th { text-align: left; color: var(--run-muted); font-size: 10px; letter-spacing: .4px; text-transform: uppercase; font-weight: 650; background: var(--run-paper); padding: 14px 16px; border-top: 1px solid var(--run-line); border-bottom: 1px solid var(--run-line); }
 .run-table td { padding: 18px 16px; border-bottom: 1px solid var(--run-line); vertical-align: top; max-width: 240px; overflow-wrap: anywhere; }
+.run-table .btn { white-space: nowrap; overflow-wrap: normal; }
 .run-table tbody tr:hover { background: #f8faff; }
 .run-table td > strong, .run-table td > span:not(.run-badge), .run-table td > small, .run-table td > time { display: block; }
 .run-table td > small, .run-table time { font-size: 11px; color: var(--run-muted); margin-top: 6px; }

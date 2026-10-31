@@ -45,6 +45,10 @@ export default function Sidebar({ path, user, menuOpen, onClose }) {
               key={section.id}
               label={section.label}
               ariaLabel={section.ariaLabel}
+              icon={section.icon}
+              description={section.description}
+              groups={section.groups}
+              className={`sidebar-section-${section.id}`}
               items={items}
               path={path}
             />
