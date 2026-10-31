@@ -3,6 +3,7 @@ import NewPasswordFields from '../components/forms/NewPasswordFields'
 import Avatar from '../components/ui/Avatar'
 import SettingsCard from '../components/ui/SettingsCard'
 import AccountTip from '../components/forms/AccountTip'
+import AlertEmailSettings from '../components/forms/AlertEmailSettings'
 import { useState } from 'react'
 import { api, getUserId, validatePassword } from '../lib/api'
 import { Icon, Notice, PageHeading, Submit } from '../components/UI'
@@ -101,6 +102,7 @@ export default function Settings({ user, setUser, security }) {
               </div>
             </form>
           </SettingsCard>
+          {!security && <AlertEmailSettings key={user.email} email={user.email} />}
         </div>
         <div className="col-xl-4">
           <AccountTip security={security} />
