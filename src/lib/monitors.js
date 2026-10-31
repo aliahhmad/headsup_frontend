@@ -61,16 +61,16 @@ export async function getMonitorRun(monitorId, runId) {
 }
 
 export function listMonitorAlerts(monitorId, page = 1) {
-  return api(`/monitors/${encodeURIComponent(monitorId)}/alerts?page=${page}&size=10`)
+  return api(`/monitors/${encodeURIComponent(monitorId)}/alerts?page=${page}&size=10&include_dismissed=true`)
 }
 
 export function getMonitorAlert(monitorId, alertId) {
   return api(`/monitors/${encodeURIComponent(monitorId)}/alerts/${encodeURIComponent(alertId)}`)
 }
 
-export function updateMonitorAlert(monitorId, alertId, changes) {
+export function markMonitorAlertRead(monitorId, alertId) {
   return api(`/monitors/${encodeURIComponent(monitorId)}/alerts/${encodeURIComponent(alertId)}`, {
-    method: 'PATCH', body: changes,
+    method: 'PATCH', body: { read: true },
   })
 }
 
