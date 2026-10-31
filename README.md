@@ -183,6 +183,15 @@ verification at `/verify`, including codes supplied through `/verify?code=…`.
 
 For reset emails to open the frontend, set `FRONTEND_URL=http://localhost:5173` in `api/.env` (use Vite’s actual URL/port), then restart the backend. Its reset route redirects to the frontend’s `/reset-password?code=…`. `BASE_URL` in `api/.env` must also match the running API address. Local emails are available in Mailpit at `http://localhost:8025`.
 
+## API on an existing Linux server
+
+Use the [backend deployment runbook](../api/docker_support/deploy/server/README.md)
+for a separate Docker backend behind an existing HTTPS tunnel. Keep the frontend
+on its current host. Set `VITE_API_URL=https://api.example.com` before building or
+redeploying; do not use `VITE_API_BASE_URL` from another project's instructions.
+This deployment exposes the API at the hostname root, without an `/api` suffix.
+The backend must allow this frontend's exact origin in `CORS_ORIGINS`.
+
 ## Production
 
 ```bash
